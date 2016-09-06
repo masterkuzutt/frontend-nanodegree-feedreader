@@ -124,9 +124,7 @@ $(function() {
           setTimeout(function () {
             spyOn(window,'loadFeed').and.callThrough();
             loadFeed(0,done);
-            console.log( JSON.stringify(content.children()));
-            console.log( content.children());
-            oldFeedElement = content.children();
+             $.extend(oldFeedElement,content.children());
           },1000);
         })
 
@@ -135,10 +133,12 @@ $(function() {
          * Remember, loadFeed() is asynchronous.
          */
        it('feed should be changed after loadFeed run' ,function (done) {
-          loadFeed(1);
-          expect(window.loadFeed).toHaveBeenCalled();
-          expect(content.children()).not.toEqual(oldFeedElement);
-          done();
+          for (var  i = 1 ; i < allFeeds.length ; i++){
+            loadFeed(i,done);
+            expect(window.loadFeed).toHaveBeenCalled();
+            expect(content.children()).not.toEqual(oldFeedElement);
+            $.extend(oldFeedElement,content.children());
+          }
        });
 
     });
