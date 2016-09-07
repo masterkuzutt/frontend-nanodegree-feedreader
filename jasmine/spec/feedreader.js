@@ -77,20 +77,16 @@ $(function() {
      *   feeds definition,menu Initial Data load
      */
     describe('Initial Entries', function() {
-        var content = $('.feed .entry-link');
+        var content;
 
-        /* it tests to make sure that the allFeeds variable has been defined */
-        it('allFeeds are defined', function() {
-            expect(allFeeds).toBeDefined();
-            expect(allFeeds.length).not.toBe(0);
+        beforeEach( function (done) {
+          loadFeed(0,done);
         });
 
         /* it tests to make sure that the initial feed load is done successfully*/
-        it('loadFeed should be called and feed container has at least one child', function(done) {
-            loadFeed(0, function () {
-              expect(content).toBeDefined();
-              done();
-            });
+        it('loadFeed should be called and feed container has at least one child', function() {
+            content = $('.feed .entry');
+            expect(content.length).toBeGreaterThan(0);
         });
 
     });
@@ -99,23 +95,21 @@ $(function() {
      *   feeds definition, feed  daata load
      */
     describe('New Feed Selection', function() {
-        var content = $('.feed .entry-link');
+        var contentOld,contentNew;
 
-        /* it tests to make sure that the allFeeds variable has been defined */
-        it('allFeeds are defined', function() {
-            expect(allFeeds).toBeDefined();
-            expect(allFeeds.length).not.toBe(0);
+        beforeEach(function (done) {
+          loadFeed(0, function () {
+            contentOld = $('.feed .entry').find('h2').first().text();
+            loadFeed(1, function () {
+              contentNew = $('.feed .entry').find('h2').first().text();
+              done();
+            });
+          });
         });
 
         /* it tests to make sure that at feed is loaded and data changed */
-        it('Feed Section should be changed after loadFeed run', function(done) {
-            loadFeed(0, function () {
-              expect(content).toBeDefined();
-              loadFeed(0, function () {
-                expect(content).toBeDefined();
-                done();
-              });
-            });
+        it('Feed Section should be changed after loadFeed run', function() {
+          expect(contentOld).not.toEqual(contentNew);
         });
 
     });
