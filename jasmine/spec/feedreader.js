@@ -77,8 +77,7 @@ $(function() {
      *   feeds definition,menu Initial Data load
      */
     describe('Initial Entries', function() {
-        var content = $('.feed');
-
+        var content = $('.feed .entry-link');
 
         /* it tests to make sure that the allFeeds variable has been defined */
         it('allFeeds are defined', function() {
@@ -86,20 +85,12 @@ $(function() {
             expect(allFeeds.length).not.toBe(0);
         });
 
-        beforeEach(function(done) {
-            setTimeout(function() {
-                spyOn(window, 'loadFeed').and.callThrough();
-                loadFeed(0, done);
-            }, 1000);
-        });
-
-
         /* it tests to make sure that the initial feed load is done successfully*/
-
-        it('loadFeed should be called and feed container has atleast one child', function(done) {
-            expect(window.loadFeed).toHaveBeenCalled();
-            expect(content.children().length).toBeGreaterThan(0);
-            done();
+        it('loadFeed should be called and feed container has at least one child', function(done) {
+            loadFeed(0, function () {
+              expect(content).toBeDefined();
+              done();
+            });
         });
 
     });
@@ -108,8 +99,7 @@ $(function() {
      *   feeds definition, feed  daata load
      */
     describe('New Feed Selection', function() {
-        var content = $('.feed'),
-            oldFeedElement;
+        var content = $('.feed .entry-link');
 
         /* it tests to make sure that the allFeeds variable has been defined */
         it('allFeeds are defined', function() {
@@ -117,22 +107,15 @@ $(function() {
             expect(allFeeds.length).not.toBe(0);
         });
 
-        beforeEach(function(done) {
-            setTimeout(function() {
-                spyOn(window, 'loadFeed').and.callThrough();
-                loadFeed(0, done);
-                $.extend(oldFeedElement, content.children());
-            }, 1000);
-        });
-
-        /* it tests to make sure that the all feed is loaded and data changed */
+        /* it tests to make sure that at feed is loaded and data changed */
         it('Feed Section should be changed after loadFeed run', function(done) {
-            for (var i = 1; i < allFeeds.length; i++) {
-                loadFeed(i, done);
-                expect(window.loadFeed).toHaveBeenCalled();
-                expect(content.children()).not.toEqual(oldFeedElement);
-                $.extend(oldFeedElement, content.children());
-            }
+            loadFeed(0, function () {
+              expect(content).toBeDefined();
+              loadFeed(0, function () {
+                expect(content).toBeDefined();
+                done();
+              });
+            });
         });
 
     });
